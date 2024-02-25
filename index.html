@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ค้นหาเว็บ</title>
+    <title>User Discord</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <label for="searchInput">ค้นหา:</label>
-        <input type="text" id="searchInput" placeholder="กรอกคำค้นหา">
-        <button onclick="search()">ค้นหา</button>
+    <div class="search-container">
+        <label for="searchInput">search :</label>
+        <input type="text" id="searchInput" placeholder="search text">
+        <button onclick="search()">Search User</button>
+    </div>
+    <div class="result-container">
         <div id="result"></div>
     </div>
     <script src="script.js"></script>
