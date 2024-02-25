@@ -4,9 +4,13 @@ function search() {
 
     // ตรวจสอบว่าคำค้นหาเป็น "1089215873354563594" หรือไม่
     if (searchInput === "1089215873354563594") {
-        resultBox.innerHTML = "user id : 1089215873354563594";
-         resultBox.innerHTML = "Like play: Roblox";
-        resultBox.innerHTML = "Like Food: Candy or cola";
+        // Concatenate multiple lines into a single string
+        var resultText = "User ID: 1089215873354563594<br>";
+        resultText += "Like play: Roblox<br>";
+        resultText += "Like Food: Candy or cola";
+
+        // Set the concatenated string as HTML content
+        resultBox.innerHTML = resultText;
     } else {
         resultBox.innerHTML = "404 Not Found";
     }
