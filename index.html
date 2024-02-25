@@ -1,90 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hangman</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    .word {
-      display: inline-block;
-      width: 500px;
-      height: 50px;
-      border: 1px solid black;
-      text-align: center;
-      line-height: 50px;
-      margin-bottom: 20px;
-    }
-    .incorrect-guess {
-      display: inline-block;
-      width: 50px;
-      height: 50px;
-      border: 1px solid black;
-      text-align: center;
-      line-height: 50px;
-      margin-right: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .word {
+            display: inline-block;
+            width: 500px;
+            height: 50px;
+            border: 1px solid black;
+            text-align: center;
+            line-height: 50px;
+            margin-bottom: 20px;
+        }
+
+        .incorrect-guess {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            text-align: center;
+            line-height: 50px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>Hangman</h1>
-  <p>Guess the word:</p>
-  <div id="word" class="word"></div>
-  <p>Incorrect guesses:</p>
-  <div id="incorrect-guesses" class="incorrect-guesses"></div>
-  <input type="text" id="guess" maxlength="1">
-  <button onclick="guessLetter()">Guess</button>
-  <script>
-    const wordList = ['apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi', 'lemon', 'mango'];
-    const word = wordList[Math.floor(Math.random() * wordList.length)];
-    const wordLength = word.length;
-    const wordDisplay = document.getElementById('word');
-    const incorrectGuessesDisplay = document.getElementById('incorrect-guesses');
-    const guessInput = document.getElementById('guess');
-    const guessButton = document.getElementById('guess-button');
-    let incorrectGuesses = [];
+    <h1>Hangman</h1>
+    <p>Guess the word:</p>
+    <div id="word" class="word"></div>
+    <p>Incorrect guesses:</p>
+    <div id="incorrect-guesses" class="incorrect-guesses"></div>
+    <input type="text" id="guess" maxlength="1">
+    <button id="guess-button" onclick="guessLetter()">Guess</button>
+    <script>
+        let wordList = ['apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi', 'lemon', 'mango'];
+        let word = '';
+        let wordLength = 0;
+        let wordDisplay = document.getElementById('word');
+        let incorrectGuessesDisplay = document.getElementById('incorrect-guesses');
+        let guessInput = document.getElementById('guess');
+        let guessButton = document.getElementById('guess-button');
+        let incorrectGuesses = [];
+        let wins = 0;
 
-    for (let i = 0; i < wordLength; i++) {
-      wordDisplay.innerHTML += '<span class="letter">_</span>';
-    }
+        function startNewGame() {
+            word = wordList[Math.floor(Math.random() * wordList.length)];
+            wordLength = word.length;
+            wordDisplay.innerHTML = '';
+            incorrectGuessesDisplay.innerHTML = '';
+            guessInput.value = '';
+            incorrectGuesses = [];
 
-    function guessLetter() {
-      const guess = guessInput.value.toLowerCase();
-      if (word.includes(guess)) {
-        for (let i = 0; i < wordLength; i++) {
-          if (word[i] === guess) {
-            const letter = document.getElementsByClassName('letter')[i];
-            letter.innerHTML = guess;
-          }
+            for (let i = 0; i < wordLength; i++) {
+                wordDisplay.innerHTML += '<span class="letter">_</span>';
+            }
         }
-      } else {
-        incorrectGuesses.push(guess);
-        const incorrectGuess = document.createElement('div');
-        incorrectGuess.className = 'incorrect-guess';
-        incorrectGuess.innerHTML = guess;
-        incorrectGuessesDisplay.appendChild(incorrectGuess);
-      }
-      guessInput.value = '';
-      checkWin();
-    }
 
-    function checkWin() {
-      let won = true;
-      for (let i = 0; i < wordLength; i++) {
-        if (document.getElementsByClassName('letter')[i].innerHTML === '_') {
-          won = false;
-          break;
+        startNewGame();
+
+        function guessLetter() {
+            const guess = guessInput.value.toLowerCase();
+            if (word.includes(guess)) {
+                for (let i = 0; i < wordLength; i++) {
+                    if (word[i] === guess) {
+                        const letter = document.getElementsByClassName('letter')[i];
+                        letter.innerHTML = guess;
+                    }
+                }
+            } else {
+                incorrectGuesses.push(guess);
+                const incorrectGuess = document.createElement('div');
+                incorrectGuess.className = 'incorrect-guess';
+                incorrectGuess.innerHTML = guess;
+                incorrectGuessesDisplay.appendChild(incorrectGuess);
+            }
+            guessInput.value = '';
+            checkWin();
         }
-      }
-      if (won) {
-        alert('You won!');
-      } else if (incorrectGuesses.length >= 6) {
-        alert('You lost! The word was ' + word);
-      }
-    }
-  </script>
+
+        function checkWin() {
+            let won = true;
+            for (let i = 0; i < wordLength; i++) {
+                if (document.getElementsByClassName('letter')[i].innerHTML === '_') {
+                    won = false;
+                    break;
+                }
+            }
+            if (won) {
+                wins++;
+                alert('You won! Total Wins: ' + wins);
+                startNewGame();
+            } else if (incorrectGuesses.length >= 6) {
+                alert('You lost! The word was ' + word);
+                startNewGame();
+            }
+        }
+    </script>
 </body>
+
 </html>
