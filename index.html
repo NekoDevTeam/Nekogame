@@ -7,48 +7,108 @@
     <title>Hangman</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0)000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .word {
-            display: inline-block;
             width: 500px;
             height: 50px;
-            border: 1px solid black;
+            border: 2px solid #4CAF50;
+            background-color: #fff;
             text-align: center;
             line-height: 50px;
             margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .incorrect-guesses {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .incorrect-guess {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 1px solid black;
+            width: 30px;
+            height: 30px;
+            border: 1px solid #000000;
             text-align: center;
-            line-height: 50px;
-            margin-right: 10px;
+            line-height: 30px;
+            margin: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #e74c3c;
+            border-radius: 50%;
         }
 
         .hint {
-            font-style: italic;
+            font-style: 1em;
             margin-top: 10px;
+            color: #000000;
+        }
+
+        #already-guessed-message {
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+
+        #guess,
+        #guess-button,
+        #new-game-button {
+            margin-top: 10px;
+            padding: 6px;
+            font-size: 1em;
+            background-color: #00ff62;
+            color: #000000;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%; /* Each button takes the full width */
+            box-sizing: border-box;
+        }
+
+        #guess {
+            width: 30px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <h1>Hangman</h1>
-    <p>Guess the word:</p>
-    <div id="word" class="word"></div>
-    <p class="hint" id="hint"></p>
-    <p>Incorrect guesses:</p>
-    <div id="incorrect-guesses" class="incorrect-guesses"></div>
-    <p id="already-guessed-message" style="color: red;"></p>
-    <input type="text" id="guess" maxlength="1">
-    <button id="guess-button" onclick="guessLetter()">Guess</button>
-    <button id="new-game-button" onclick="startNewGame()">New Game</button>
+    <div class="container">
+        <h1>Hangman</h1>
+        <p>Guess the word:</p>
+        <div id="word" class="word"></div>
+        <p class="hint" id="hint"></p>
+        <p>Incorrect guesses:</p>
+        <div id="incorrect-guesses" class="incorrect-guesses"></div>
+        <p id="already-guessed-message"></p>
+        <input type="text" id="guess" maxlength="1">
+        <button id="guess-button" onclick="guessLetter()">Guess</button>
+        <button id="new-game-button" onclick="startNewGame()">New Game</button>
+    </div>
     <script>
         let wordList = ['apple', 'banana', 'cherry', 'egg', 'grape', 'orange', 'pear', 'melon', 'kiwi', 'mango',
             'strawberry', 'blueberry', 'raspberry', 'blackberry', 'pineapple', 'watermelon', 'peach', 'plum', 'apricot',
@@ -56,7 +116,13 @@
             'carrot', 'broccoli', 'potato', 'tomato', 'cucumber', 'onion', 'garlic', 'ginger', 'bell pepper', 'spinach',
             'lettuce', 'cabbage', 'zucchini', 'sweet potato', 'radish', 'asparagus', 'celery', 'corn', 'peas',
             'bluebell', 'rose', 'sunflower', 'tulip', 'daisy', 'lily', 'orchid', 'carnation', 'hibiscus', 'chrysanthemum',
-            'jasmine', 'lavender', 'daffodil', 'marigold', 'violet', 'poppy', 'dandelion', 'petunia', 'aster', 'butterfly'
+            'jasmine', 'lavender', 'daffodil', 'marigold', 'violet', 'poppy', 'dandelion', 'petunia', 'aster', 'butterfly',
+            'zebra', 'giraffe', 'elephant', 'lion', 'tiger', 'cheetah', 'rhinoceros', 'hippopotamus', 'kangaroo', 'koala',
+            'penguin', 'ostrich', 'gorilla', 'koala', 'chimpanzee', 'orangutan', 'parrot', 'hummingbird', 'pelican', 'ocean',
+            'mountain', 'desert', 'river', 'forest', 'volcano', 'island', 'canyon', 'glacier', 'waterfall', 'aurora',
+            'moon', 'star', 'planet', 'galaxy', 'spaceship', 'astronaut', 'satellite', 'telescope', 'comet', 'meteor',
+            'technology', 'innovation', 'robot', 'computer', 'internet', 'software', 'hardware', 'database', 'algorithm',
+            'programming', 'developer', 'code', 'bug', 'debugging'
         ];
         let word = '';
         let wordLength = 0;
@@ -226,6 +292,112 @@
                     return 'Daisy-like flowers in various colors';
                 case 'butterfly':
                     return 'Insect with colorful wings';
+                case 'zebra':
+                    return 'Black and white striped animal';
+                case 'giraffe':
+                    return 'Tall with a spotted coat';
+                case 'elephant':
+                    return 'Large mammal with tusks';
+                case 'lion':
+                    return 'Big cat, often called the "king of the jungle"';
+                case 'tiger':
+                    return 'Striped big cat';
+                case 'cheetah':
+                    return 'Fastest land animal';
+                case 'rhinoceros':
+                    return 'Large herbivorous mammal with a horn';
+                case 'hippopotamus':
+                    return 'Large, mostly herbivorous mammal';
+                case 'kangaroo':
+                    return 'Marsupial with a pouch';
+                case 'koala':
+                    return 'Tree-dwelling marsupial';
+                case 'penguin':
+                    return 'Flightless bird, often found in Antarctica';
+                case 'ostrich':
+                    return 'Large flightless bird';
+                case 'gorilla':
+                    return 'Large ape, often found in forests';
+                case 'chimpanzee':
+                    return 'Intelligent ape, shares DNA with humans';
+                case 'orangutan':
+                    return 'Tree-dwelling ape found in Asia';
+                case 'parrot':
+                    return 'Colorful bird, known for mimicking human speech';
+                case 'hummingbird':
+                    return 'Small bird capable of hovering in mid-air';
+                case 'pelican':
+                    return 'Large water bird with a long beak';
+                case 'ocean':
+                    return 'Vast body of saltwater';
+                case 'mountain':
+                    return 'High, rocky landform';
+                case 'desert':
+                    return 'Dry and arid biome';
+                case 'river':
+                    return 'Natural flowing watercourse';
+                case 'forest':
+                    return 'Large area covered with trees';
+                case 'volcano':
+                    return 'Opening in the Earth\'s crust, often with lava';
+                case 'island':
+                    return 'Landmass surrounded by water';
+                case 'canyon':
+                    return 'Deep and narrow valley with steep sides';
+                case 'glacier':
+                    return 'Slow-moving mass of ice';
+                case 'waterfall':
+                    return 'A cascade of water falling from a height';
+                case 'aurora':
+                    return 'Natural light display in the sky, often near the poles';
+                case 'moon':
+                    return 'Earth\'s natural satellite';
+                case 'star':
+                    return 'Luminous celestial object in the sky';
+                case 'planet':
+                    return 'Large celestial body that orbits a star';
+                case 'galaxy':
+                    return 'Vast system of stars, gas, and dust';
+                case 'spaceship':
+                    return 'Vehicle designed for travel or operation in outer space';
+                case 'astronaut':
+                    return 'Person trained for space travel';
+                case 'satellite':
+                    return 'Object orbiting a larger object';
+                case 'telescope':
+                    return 'Optical instrument for observing distant objects';
+                case 'comet':
+                    return 'Celestial object with a tail, composed of ice and dust';
+                case 'meteor':
+                    return 'Small celestial body entering Earth\'s atmosphere';
+                case 'technology':
+                    return 'Application of scientific knowledge for practical purposes';
+                case 'innovation':
+                    return 'Introduction of something new or improved';
+                case 'robot':
+                    return 'Programmable machine capable of carrying out tasks autonomously';
+                case 'computer':
+                    return 'Electronic device for processing and storing data';
+                case 'internet':
+                    return 'Global network connecting millions of computers';
+                case 'software':
+                    return 'Programs and data that operate on a computer';
+                case 'hardware':
+                    return 'Physical components of a computer system';
+                case 'database':
+                    return 'Structured collection of data';
+                case 'algorithm':
+                    return 'Step-by-step procedure or formula for solving a problem';
+                case 'programming':
+                    return 'Writing code to instruct a computer';
+                case 'developer':
+                    return 'Person who creates software or applications';
+                case 'code':
+                    return 'Set of instructions written in a programming language';
+                case 'bug':
+                    return 'Error or flaw in a computer program';
+                case 'debugging':
+                    return 'Identifying and fixing errors in a program';
                 default:
                     return 'No hint available';
             }
@@ -274,7 +446,7 @@
                 wins++;
                 alert('You won! Total Wins: ' + wins);
                 startNewGame();
-            } else if (incorrectGuesses.length >= 12) {
+            } else if (incorrectGuesses.length >= 8) {
                 alert('You lost! The word was ' + word);
                 startNewGame();
             }
