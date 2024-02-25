@@ -50,7 +50,7 @@
     <button id="guess-button" onclick="guessLetter()">Guess</button>
     <button id="new-game-button" onclick="startNewGame()">New Game</button>
     <script>
-        let wordList = ['apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi', 'lemon', 'mango'];
+        let wordList = ['apple', 'banana', 'cherry', 'Egg'];
         let word = '';
         let wordLength = 0;
         let wordDisplay = document.getElementById('word');
@@ -84,10 +84,13 @@
         function getHint(word) {
             switch (word) {
                 case 'apple':
-                    return 'A fruit';
+                    return 'A red fruit';
                 case 'banana':
                     return 'A yellow fruit';
-                // Add hints for other words as needed
+                case 'cherry':
+                    return 'A red and mini fruit';
+                case 'egg':
+                    return 'A raw food?';
                 default:
                     return 'No hint available';
             }
