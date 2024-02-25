@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        #game-board {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 2px solid #333;
+        }
+
+        .snake-part {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ffffff; /* Default color for snake body */
+        }
+
+        .snake-head {
+            background-color: #6200ff; /* Color for snake head */
+        }
+
+        #food {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #3409ce;
+        }
+
+        #score {
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-board"></div>
+    <div id="score">Score: 0</div>
+
+    <script>
+        const gameBoard = document.getElementById('game-board');
+        const scoreDisplay = document.getElementById('score');
+        const initialSnakeLength = 3;
+        let snake = [];
+        let direction = 'right';
+        let foodPosition = { x: 0, y: 0 };
+        let score = 0;
+        let speed = 15; // Initial speed
+        let intervalId; // To store the interval ID
+
+        function initializeGame() {
+            createSnake();
+            createFood();
+            document.addEventListener('keydown', changeDirection);
+
+            // Trigger an initial key press to start moving
+            window.addEventListener('keydown', startGame);
+        }
+
+        function startGame() {
+            // Remove the temporary event listener
+            window.removeEventListener('keydown', startGame);
+
+            // Start the game loop
+            intervalId = setInterval(moveSnake, speed);
+        }
+
+        function createSnake() {
+            for (let i = 0; i < initialSnakeLength; i++) {
+                const isHead = i === 0;
+                const snakePart = createSnakePart(i, 0, isHead);
+                snake.push(snakePart);
+                gameBoard.appendChild(snakePart);
+            }
+        }
+
+        function createSnakePart(x, y, isHead) {
+            const snakePart = document.createElement('div');
+            snakePart.classList.add('snake-part');
+            if (isHead) {
+                snakePart.classList.add('snake-head');
+            }
+            snakePart.style.left = x * 20 + 'px';
+            snakePart.style.top = y * 20 + 'px';
+            return snakePart;
+        }
+
+        function createFood() {
+            const food = document.getElementById('food');
+            if (food) {
+                gameBoard.removeChild(food);
+            }
+
+            let x, y;
+            do {
+                x = Math.floor(Math.random() * 14);
+                y = Math.floor(Math.random() * 14);
+            } while (snake.some(part => parseInt(part.style.left) / 20 === x && parseInt(part.style.top) / 20 === y));
+
+            foodPosition = { x, y };
+
+            const foodElement = document.createElement('div');
+            foodElement.id = 'food';
+            foodElement.style.left = x * 20 + 'px';
+            foodElement.style.top = y * 20 + 'px';
+
+            gameBoard.appendChild(foodElement);
+        }
+
+        function moveSnake() {
+            const head = snake[0];
+            let x = parseInt(head.style.left) / 20;
+            let y = parseInt(head.style.top) / 20;
+
+            switch (direction) {
+                case 'up':
+                    y--;
+                    break;
+                case 'down':
+                    y++;
+                    break;
+                case 'left':
+                    x--;
+                    break;
+                case 'right':
+                    x++;
+                    break;
+            }
+
+            if (checkCollision(x, y)) {
+                alert('Game Over! Your score: ' + score);
+                resetGame();
+                return;
+            }
+
+            const newHead = createSnakePart(x, y, true);
+            snake.unshift(newHead);
+            gameBoard.insertBefore(newHead, gameBoard.firstChild);
+
+            if (x === foodPosition.x && y === foodPosition.y) {
+                createFood();
+                score++;
+                scoreDisplay.textContent = 'Score: ' + score;
+
+                // Increase speed for every 5 points scored
+                if (score % 5 === 0) {
+                    speed -= 10;
+                }
+
+                clearInterval(intervalId); // Clear the existing interval
+                intervalId = setInterval(moveSnake, speed); // Set a new interval with updated speed
+            } else {
+                const tail = snake.pop();
+                gameBoard.removeChild(tail);
+            }
+        }
+
+        function checkCollision(x, y) {
+            return (
+                x < 0 || x >= 15 || y < 0 || y >= 15 ||
+                snake.some((part, index) => index > 0 && parseInt(part.style.left) / -20 === x && parseInt(part.style.top) / -20 === y)
+            );
+        }
+
+        function changeDirection(event) {
+            switch (event.key) {
+                case 'ArrowUp':
+                case 'w':
+                    if (direction !== 'down') {
+                        direction = 'up';
+                    }
+                    break;
+                case 'ArrowDown':
+                case 's':
+                    if (direction !== 'up') {
+                        direction = 'down';
+                    }
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                    if (direction !== 'right') {
+                        direction = 'left';
+                    }
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                    if (direction !== 'left') {
+                        direction = 'right';
+                    }
+                    break;
+            }
+        }
+
+        function resetGame() {
+            clearInterval(intervalId); // Clear the existing interval
+            document.removeEventListener('keydown', changeDirection); // Remove the event listener
+            snake.forEach(part => gameBoard.removeChild(part));
+            snake = [];
+            direction = 'right';
+            score = 0;
+            scoreDisplay.textContent = 'Score: ' + score;
+            speed = 150; // Reset speed to initial value
+            initializeGame();
+        }
+
+        initializeGame();
+    </script>
+</body>
+</html>
