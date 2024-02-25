@@ -1,1 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0)000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .word {
+            width: 500px;
+            height: 50px;
+            border: 2px solid #4CAF50;
+            background-color: #fff;
+            text-align: center;
+            line-height: 50px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .incorrect-guesses {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .incorrect-guess {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #000000;
+            text-align: center;
+            line-height: 30px;
+            margin: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #e74c3c;
+            border-radius: 50%;
+        }
+
+        .hint {
+            font-style: 1em;
+            margin-top: 10px;
+            color: #000000;
+        }
+
+        #already-guessed-message {
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+
+        #guess,
+        #guess-button,
+        #new-game-button {
+            margin-top: 10px;
+            padding: 6px;
+            font-size: 1em;
+            background-color: #00ff62;
+            color: #000000;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%; /* Each button takes the full width */
+            box-sizing: border-box;
+        }
+
+        #guess {
+            width: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Hangman</h1>
+        <p>Guess the word:</p>
+        <div id="word" class="word"></div>
+        <p class="hint" id="hint"></p>
+        <p>Incorrect guesses:</p>
+        <div id="incorrect-guesses" class="incorrect-guesses"></div>
+        <p id="already-guessed-message"></p>
+        <input type="text" id="guess" maxlength="1">
+        <button id="guess-button" onclick="guessLetter()">Guess</button>
+        <button id="new-game-button" onclick="startNewGame()">New Game</button>
+    </div>
+    <script>
+        let wordList = ['apple', 'banana', 'cherry', 'egg', 'grape', 'orange', 'pear', 'melon', 'kiwi', 'mango',
+            'strawberry', 'blueberry', 'raspberry', 'blackberry', 'pineapple', 'watermelon', 'peach', 'plum', 'apricot',
+            'lemon', 'lime', 'coconut', 'pomegranate', 'avocado', 'fig', 'date', 'passionfruit', 'guava', 'papaya',
+            'carrot', 'broccoli', 'potato', 'tomato', 'cucumber', 'onion', 'garlic', 'ginger', 'bell pepper', 'spinach',
+            'lettuce', 'cabbage', 'zucchini', 'sweet potato', 'radish', 'asparagus', 'celery', 'corn', 'peas',
+            'bluebell', 'rose', 'sunflower', 'tulip', 'daisy', 'lily', 'orchid', 'carnation', 'hibiscus', 'chrysanthemum',
+            'jasmine', 'lavender', 'daffodil', 'marigold', 'violet', 'poppy', 'dandelion', 'petunia', 'aster', 'butterfly',
+            'zebra', 'giraffe', 'elephant', 'lion', 'tiger', 'cheetah', 'rhinoceros', 'hippopotamus', 'kangaroo', 'koala',
+            'penguin', 'ostrich', 'gorilla', 'koala', 'chimpanzee', 'orangutan', 'parrot', 'hummingbird', 'pelican', 'ocean',
+            'mountain', 'desert', 'river', 'forest', 'volcano', 'island', 'canyon', 'glacier', 'waterfall', 'aurora',
+            'moon', 'star', 'planet', 'galaxy', 'spaceship', 'astronaut', 'satellite', 'telescope', 'comet', 'meteor',
+            'technology', 'innovation', 'robot', 'computer', 'internet', 'software', 'hardware', 'database', 'algorithm',
+            'programming', 'developer', 'code', 'bug', 'debugging'
+        ];
+        let word = '';
+        let wordLength = 0;
+        let wordDisplay = document.getElementById('word');
+        let incorrectGuessesDisplay = document.getElementById('incorrect-guesses');
+        let guessInput = document.getElementById('guess');
+        let guessButton = document.getElementById('guess-button');
+        let newGameButton = document.getElementById('new-game-button');
+        let hintDisplay = document.getElementById('hint');
+        let alreadyGuessedMessage = document.getElementById('already-guessed-message');
+        let incorrectGuesses = [];
+        let guessedLetters = [];
+        let wins = 0;
+
+        function startNewGame() {
+            word = wordList[Math.floor(Math.random() * wordList.length)];
+            wordLength = word.length;
+            wordDisplay.innerHTML = '';
+            incorrectGuessesDisplay.innerHTML = '';
+            guessInput.value = '';
+            alreadyGuessedMessage.textContent = '';
+            incorrectGuesses = [];
+            guessedLetters = [];
+
+            for (let i = 0; i < wordLength; i++) {
+                wordDisplay.innerHTML += '<span class="letter">_</span>';
+            }
+
+            hintDisplay.innerHTML = 'Hint: ' + getHint(word);
+        }
+
+        function getHint(word) {
+            switch (word) {
+                case 'apple':
+                    return 'A red fruit';
+                case 'banana':
+                    return 'A yellow fruit';
+                case 'cherry':
+                    return 'A red and mini fruit';
+                case 'egg':
+                    return 'A raw food?';
+                case 'grape':
+                    return 'Comes in bunches';
+                case 'orange':
+                    return 'Citrus fruit';
+                case 'pear':
+                    return 'Often green or yellow';
+                case 'melon':
+                    return 'Sweet summer fruit';
+                case 'kiwi':
+                    return 'Small, brown, and fuzzy';
+                case 'mango':
+                    return 'Tropical and juicy';
+                case 'strawberry':
+                    return 'Small, red, and sweet';
+                case 'blueberry':
+                    return 'Small, round, and blue';
+                case 'raspberry':
+                    return 'Red and full of tiny seeds';
+                case 'blackberry':
+                    return 'Dark purple and delicious';
+                case 'pineapple':
+                    return 'Tropical with a spiky exterior';
+                case 'watermelon':
+                    return 'Large and refreshing';
+                case 'peach':
+                    return 'Fuzzy and soft';
+                case 'plum':
+                    return 'Sweet and tart';
+                case 'apricot':
+                    return 'Yellow-orange and velvety';
+                case 'lemon':
+                    return 'Sour citrus fruit';
+                case 'lime':
+                    return 'Green and tangy';
+                case 'coconut':
+                    return 'Tropical and has a hard shell';
+                case 'pomegranate':
+                    return 'Red with juicy seeds';
+                case 'avocado':
+                    return 'Creamy green fruit';
+                case 'fig':
+                    return 'Sweet and teardrop-shaped';
+                case 'date':
+                    return 'Sweet and wrinkled';
+                case 'passionfruit':
+                    return 'Unique and aromatic';
+                case 'guava':
+                    return 'Tropical and fragrant';
+                case 'papaya':
+                    return 'Orange and tropical';
+                case 'carrot':
+                    return 'Orange vegetable';
+                case 'broccoli':
+                    return 'Green and a favorite of kids';
+                case 'potato':
+                    return 'Starchy and comes in various colors';
+                case 'tomato':
+                    return 'Red and used in many dishes';
+                case 'cucumber':
+                    return 'Green and often used in salads';
+                case 'onion':
+                    return 'Pungent and adds flavor to dishes';
+                case 'garlic':
+                    return 'Small white cloves with a strong flavor';
+                case 'ginger':
+                    return 'Spicy and often used in Asian cuisine';
+                case 'bell pepper':
+                    return 'Comes in various colors';
+                case 'spinach':
+                    return 'Dark green and rich in nutrients';
+                case 'lettuce':
+                    return 'Used in salads and sandwiches';
+                case 'cabbage':
+                    return 'Leafy and can be green or purple';
+                case 'zucchini':
+                    return 'Green and versatile in cooking';
+                case 'sweet potato':
+                    return 'Orange and sweet';
+                case 'radish':
+                    return 'Red or white and crunchy';
+                case 'asparagus':
+                    return 'Green or purple and tender';
+                case 'celery':
+                    return 'Crunchy and often used in soups';
+                case 'corn':
+                    return 'Yellow or white kernels on a cob';
+                case 'peas':
+                    return 'Small and green in a pod';
+                case 'bluebell':
+                    return 'Bell-shaped flowers';
+                case 'rose':
+                    return 'Symbol of love, comes in various colors';
+                case 'sunflower':
+                    return 'Yellow and follows the sun';
+                case 'tulip':
+                    return 'Colorful and popular in gardens';
+                case 'daisy':
+                    return 'Simple white flowers with a yellow center';
+                case 'lily':
+                    return 'Elegant and fragrant flowers';
+                case 'orchid':
+                    return 'Exotic and diverse in colors';
+                case 'carnation':
+                    return 'Often used in bouquets';
+                case 'hibiscus':
+                    return 'Tropical and vibrant';
+                case 'chrysanthemum':
+                    return 'Common in fall, many petal varieties';
+                case 'jasmine':
+                    return 'Fragrant white flowers';
+                case 'lavender':
+                    return 'Aromatic and purple';
+                case 'daffodil':
+                    return 'Yellow flowers with a trumpet shape';
+                case 'marigold':
+                    return 'Bright orange or yellow flowers';
+                case 'violet':
+                    return 'Small and purple';
+                case 'poppy':
+                    return 'Colorful flowers often used in gardens';
+                case 'dandelion':
+                    return 'Yellow flowers with fluffy seeds';
+                case 'petunia':
+                    return 'Trumpet-shaped flowers in various colors';
+                case 'aster':
+                    return 'Daisy-like flowers in various colors';
+                case 'butterfly':
+                    return 'Insect with colorful wings';
+                case 'zebra':
+                    return 'Black and white striped animal';
+                case 'giraffe':
+                    return 'Tall with a spotted coat';
+                case 'elephant':
+                    return 'Large mammal with tusks';
+                case 'lion':
+                    return 'Big cat, often called the "king of the jungle"';
+                case 'tiger':
+                    return 'Striped big cat';
+                case 'cheetah':
+                    return 'Fastest land animal';
+                case 'rhinoceros':
+                    return 'Large herbivorous mammal with a horn';
+                case 'hippopotamus':
+                    return 'Large, mostly herbivorous mammal';
+                case 'kangaroo':
+                    return 'Marsupial with a pouch';
+                case 'koala':
+                    return 'Tree-dwelling marsupial';
+                case 'penguin':
+                    return 'Flightless bird, often found in Antarctica';
+                case 'ostrich':
+                    return 'Large flightless bird';
+                case 'gorilla':
+                    return 'Large ape, often found in forests';
+                case 'chimpanzee':
+                    return 'Intelligent ape, shares DNA with humans';
+                case 'orangutan':
+                    return 'Tree-dwelling ape found in Asia';
+                case 'parrot':
+                    return 'Colorful bird, known for mimicking human speech';
+                case 'hummingbird':
+                    return 'Small bird capable of hovering in mid-air';
+                case 'pelican':
+                    return 'Large water bird with a long beak';
+                case 'ocean':
+                    return 'Vast body of saltwater';
+                case 'mountain':
+                    return 'High, rocky landform';
+                case 'desert':
+                    return 'Dry and arid biome';
+                case 'river':
+                    return 'Natural flowing watercourse';
+                case 'forest':
+                    return 'Large area covered with trees';
+                case 'volcano':
+                    return 'Opening in the Earth\'s crust, often with lava';
+                case 'island':
+                    return 'Landmass surrounded by water';
+                case 'canyon':
+                    return 'Deep and narrow valley with steep sides';
+                case 'glacier':
+                    return 'Slow-moving mass of ice';
+                case 'waterfall':
+                    return 'A cascade of water falling from a height';
+                case 'aurora':
+                    return 'Natural light display in the sky, often near the poles';
+                case 'moon':
+                    return 'Earth\'s natural satellite';
+                case 'star':
+                    return 'Luminous celestial object in the sky';
+                case 'planet':
+                    return 'Large celestial body that orbits a star';
+                case 'galaxy':
+                    return 'Vast system of stars, gas, and dust';
+                case 'spaceship':
+                    return 'Vehicle designed for travel or operation in outer space';
+                case 'astronaut':
+                    return 'Person trained for space travel';
+                case 'satellite':
+                    return 'Object orbiting a larger object';
+                case 'telescope':
+                    return 'Optical instrument for observing distant objects';
+                case 'comet':
+                    return 'Celestial object with a tail, composed of ice and dust';
+                case 'meteor':
+                    return 'Small celestial body entering Earth\'s atmosphere';
+                case 'technology':
+                    return 'Application of scientific knowledge for practical purposes';
+                case 'innovation':
+                    return 'Introduction of something new or improved';
+                case 'robot':
+                    return 'Programmable machine capable of carrying out tasks autonomously';
+                case 'computer':
+                    return 'Electronic device for processing and storing data';
+                case 'internet':
+                    return 'Global network connecting millions of computers';
+                case 'software':
+                    return 'Programs and data that operate on a computer';
+                case 'hardware':
+                    return 'Physical components of a computer system';
+                case 'database':
+                    return 'Structured collection of data';
+                case 'algorithm':
+                    return 'Step-by-step procedure or formula for solving a problem';
+                case 'programming':
+                    return 'Writing code to instruct a computer';
+                case 'developer':
+                    return 'Person who creates software or applications';
+                case 'code':
+                    return 'Set of instructions written in a programming language';
+                case 'bug':
+                    return 'Error or flaw in a computer program';
+                case 'debugging':
+                    return 'Identifying and fixing errors in a program';
+                default:
+                    return 'No hint available';
+            }
+        }
+
+        startNewGame();
+
+        function guessLetter() {
+            const guess = guessInput.value.toLowerCase();
+
+            if (guessedLetters.includes(guess)) {
+                alreadyGuessedMessage.textContent = 'You already guessed that letter.';
+                return;
+            }
+
+            alreadyGuessedMessage.textContent = '';
+            guessedLetters.push(guess);
+
+            if (word.includes(guess)) {
+                for (let i = 0; i < wordLength; i++) {
+                    if (word[i] === guess) {
+                        const letter = document.getElementsByClassName('letter')[i];
+                        letter.innerHTML = guess;
+                    }
+                }
+            } else {
+                incorrectGuesses.push(guess);
+                const incorrectGuess = document.createElement('div');
+                incorrectGuess.className = 'incorrect-guess';
+                incorrectGuess.innerHTML = guess;
+                incorrectGuessesDisplay.appendChild(incorrectGuess);
+            }
+            guessInput.value = '';
+            checkWin();
+        }
+
+        function checkWin() {
+            let won = true;
+            for (let i = 0; i < wordLength; i++) {
+                if (document.getElementsByClassName('letter')[i].innerHTML === '_') {
+                    won = false;
+                    break;
+                }
+            }
+            if (won) {
+                wins++;
+                alert('You won! Total Wins: ' + wins);
+                startNewGame();
+            } else if (incorrectGuesses.length >= 8) {
+                alert('You lost! The word was ' + word);
+                startNewGame();
+            }
+        }
+    </script>
+</body>
+
+</html>
