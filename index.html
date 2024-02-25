@@ -30,6 +30,11 @@
             line-height: 50px;
             margin-right: 10px;
         }
+
+        .hint {
+            font-style: italic;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -37,8 +42,10 @@
     <h1>Hangman</h1>
     <p>Guess the word:</p>
     <div id="word" class="word"></div>
+    <p class="hint" id="hint"></p>
     <p>Incorrect guesses:</p>
     <div id="incorrect-guesses" class="incorrect-guesses"></div>
+    <p id="already-guessed-message" style="color: red;"></p>
     <input type="text" id="guess" maxlength="1">
     <button id="guess-button" onclick="guessLetter()">Guess</button>
     <button id="new-game-button" onclick="startNewGame()">New Game</button>
@@ -51,7 +58,10 @@
         let guessInput = document.getElementById('guess');
         let guessButton = document.getElementById('guess-button');
         let newGameButton = document.getElementById('new-game-button');
+        let hintDisplay = document.getElementById('hint');
+        let alreadyGuessedMessage = document.getElementById('already-guessed-message');
         let incorrectGuesses = [];
+        let guessedLetters = [];
         let wins = 0;
 
         function startNewGame() {
@@ -60,10 +70,26 @@
             wordDisplay.innerHTML = '';
             incorrectGuessesDisplay.innerHTML = '';
             guessInput.value = '';
+            alreadyGuessedMessage.textContent = '';
             incorrectGuesses = [];
+            guessedLetters = [];
 
             for (let i = 0; i < wordLength; i++) {
                 wordDisplay.innerHTML += '<span class="letter">_</span>';
+            }
+
+            hintDisplay.innerHTML = 'Hint: ' + getHint(word);
+        }
+
+        function getHint(word) {
+            switch (word) {
+                case 'apple':
+                    return 'A fruit';
+                case 'banana':
+                    return 'A yellow fruit';
+                // Add hints for other words as needed
+                default:
+                    return 'No hint available';
             }
         }
 
@@ -71,6 +97,15 @@
 
         function guessLetter() {
             const guess = guessInput.value.toLowerCase();
+
+            if (guessedLetters.includes(guess)) {
+                alreadyGuessedMessage.textContent = 'You already guessed that letter.';
+                return;
+            }
+
+            alreadyGuessedMessage.textContent = '';
+            guessedLetters.push(guess);
+
             if (word.includes(guess)) {
                 for (let i = 0; i < wordLength; i++) {
                     if (word[i] === guess) {
