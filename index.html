@@ -50,7 +50,14 @@
     <button id="guess-button" onclick="guessLetter()">Guess</button>
     <button id="new-game-button" onclick="startNewGame()">New Game</button>
     <script>
-        let wordList = ['apple', 'banana', 'cherry', 'egg'];
+        let wordList = ['apple', 'banana', 'cherry', 'egg', 'grape', 'orange', 'pear', 'melon', 'kiwi', 'mango',
+            'strawberry', 'blueberry', 'raspberry', 'blackberry', 'pineapple', 'watermelon', 'peach', 'plum', 'apricot',
+            'lemon', 'lime', 'coconut', 'pomegranate', 'avocado', 'fig', 'date', 'passionfruit', 'guava', 'papaya',
+            'carrot', 'broccoli', 'potato', 'tomato', 'cucumber', 'onion', 'garlic', 'ginger', 'bell pepper', 'spinach',
+            'lettuce', 'cabbage', 'zucchini', 'sweet potato', 'radish', 'asparagus', 'celery', 'corn', 'peas',
+            'bluebell', 'rose', 'sunflower', 'tulip', 'daisy', 'lily', 'orchid', 'carnation', 'hibiscus', 'chrysanthemum',
+            'jasmine', 'lavender', 'daffodil', 'marigold', 'violet', 'poppy', 'dandelion', 'petunia', 'aster', 'butterfly'
+        ];
         let word = '';
         let wordLength = 0;
         let wordDisplay = document.getElementById('word');
@@ -91,6 +98,134 @@
                     return 'A red and mini fruit';
                 case 'egg':
                     return 'A raw food?';
+                case 'grape':
+                    return 'Comes in bunches';
+                case 'orange':
+                    return 'Citrus fruit';
+                case 'pear':
+                    return 'Often green or yellow';
+                case 'melon':
+                    return 'Sweet summer fruit';
+                case 'kiwi':
+                    return 'Small, brown, and fuzzy';
+                case 'mango':
+                    return 'Tropical and juicy';
+                case 'strawberry':
+                    return 'Small, red, and sweet';
+                case 'blueberry':
+                    return 'Small, round, and blue';
+                case 'raspberry':
+                    return 'Red and full of tiny seeds';
+                case 'blackberry':
+                    return 'Dark purple and delicious';
+                case 'pineapple':
+                    return 'Tropical with a spiky exterior';
+                case 'watermelon':
+                    return 'Large and refreshing';
+                case 'peach':
+                    return 'Fuzzy and soft';
+                case 'plum':
+                    return 'Sweet and tart';
+                case 'apricot':
+                    return 'Yellow-orange and velvety';
+                case 'lemon':
+                    return 'Sour citrus fruit';
+                case 'lime':
+                    return 'Green and tangy';
+                case 'coconut':
+                    return 'Tropical and has a hard shell';
+                case 'pomegranate':
+                    return 'Red with juicy seeds';
+                case 'avocado':
+                    return 'Creamy green fruit';
+                case 'fig':
+                    return 'Sweet and teardrop-shaped';
+                case 'date':
+                    return 'Sweet and wrinkled';
+                case 'passionfruit':
+                    return 'Unique and aromatic';
+                case 'guava':
+                    return 'Tropical and fragrant';
+                case 'papaya':
+                    return 'Orange and tropical';
+                case 'carrot':
+                    return 'Orange vegetable';
+                case 'broccoli':
+                    return 'Green and a favorite of kids';
+                case 'potato':
+                    return 'Starchy and comes in various colors';
+                case 'tomato':
+                    return 'Red and used in many dishes';
+                case 'cucumber':
+                    return 'Green and often used in salads';
+                case 'onion':
+                    return 'Pungent and adds flavor to dishes';
+                case 'garlic':
+                    return 'Small white cloves with a strong flavor';
+                case 'ginger':
+                    return 'Spicy and often used in Asian cuisine';
+                case 'bell pepper':
+                    return 'Comes in various colors';
+                case 'spinach':
+                    return 'Dark green and rich in nutrients';
+                case 'lettuce':
+                    return 'Used in salads and sandwiches';
+                case 'cabbage':
+                    return 'Leafy and can be green or purple';
+                case 'zucchini':
+                    return 'Green and versatile in cooking';
+                case 'sweet potato':
+                    return 'Orange and sweet';
+                case 'radish':
+                    return 'Red or white and crunchy';
+                case 'asparagus':
+                    return 'Green or purple and tender';
+                case 'celery':
+                    return 'Crunchy and often used in soups';
+                case 'corn':
+                    return 'Yellow or white kernels on a cob';
+                case 'peas':
+                    return 'Small and green in a pod';
+                case 'bluebell':
+                    return 'Bell-shaped flowers';
+                case 'rose':
+                    return 'Symbol of love, comes in various colors';
+                case 'sunflower':
+                    return 'Yellow and follows the sun';
+                case 'tulip':
+                    return 'Colorful and popular in gardens';
+                case 'daisy':
+                    return 'Simple white flowers with a yellow center';
+                case 'lily':
+                    return 'Elegant and fragrant flowers';
+                case 'orchid':
+                    return 'Exotic and diverse in colors';
+                case 'carnation':
+                    return 'Often used in bouquets';
+                case 'hibiscus':
+                    return 'Tropical and vibrant';
+                case 'chrysanthemum':
+                    return 'Common in fall, many petal varieties';
+                case 'jasmine':
+                    return 'Fragrant white flowers';
+                case 'lavender':
+                    return 'Aromatic and purple';
+                case 'daffodil':
+                    return 'Yellow flowers with a trumpet shape';
+                case 'marigold':
+                    return 'Bright orange or yellow flowers';
+                case 'violet':
+                    return 'Small and purple';
+                case 'poppy':
+                    return 'Colorful flowers often used in gardens';
+                case 'dandelion':
+                    return 'Yellow flowers with fluffy seeds';
+                case 'petunia':
+                    return 'Trumpet-shaped flowers in various colors';
+                case 'aster':
+                    return 'Daisy-like flowers in various colors';
+                case 'butterfly':
+                    return 'Insect with colorful wings';
                 default:
                     return 'No hint available';
             }
