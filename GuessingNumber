@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="-8">
+    <meta name="viewport" content="=device-width, initial-scale=1.0">
+    <title>Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 2rem;
+        }
+        #result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Guessing Game</h1>
+    <p>
+        We have generated a random number between <span id="rangeStart"></span> and <span id="rangeEnd"></span>.
+        Can you guess what it is?
+    </p>
+    <input type="number" id="guessInput" min="1" max="100">
+    <button id="guessButton">Guess</button>
+    <p id="result"></p>
+    <script>
+        const minNumber = 1;
+        const maxNumber = 100;
+        const resultElement = document.getElementById('result');
+        const rangeStartElement = document.getElementById('rangeStart');
+        const rangeEndElement = document.getElementById('rangeEnd');
+        let randomNumber;
+
+        rangeStartElement.textContent = minNumber;
+        rangeEndElement.textContent = maxNumber;
+
+        function generateRandomNumber() {
+            randomNumber = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+        }
+
+        generateRandomNumber();
+
+        document.getElementById('guessButton').addEventListener('click', () => {
+            const guess = parseInt(document.getElementById('guessInput').value);
+
+            if (isNaN(guess) || guess < minNumber || guess > maxNumber) {
+                resultElement.textContent = 'Please enter a valid number between ' + minNumber + ' and ' + maxNumber + '.';
+                return;
+            }
+
+            if (guess < randomNumber) {
+                resultElement.textContent = 'Too low! Try again.';
+            } else if (guess > randomNumber) {
+                resultElement.textContent = 'Too high! Try again.';
+            } else {
+                resultElement.textContent = 'Congratulations! You guessed the number.';
+                generateRandomNumber();
+            }
+        });
+    </script>
+</body>
+</html>
