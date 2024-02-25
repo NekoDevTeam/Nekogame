@@ -41,6 +41,7 @@
     <div id="incorrect-guesses" class="incorrect-guesses"></div>
     <input type="text" id="guess" maxlength="1">
     <button id="guess-button" onclick="guessLetter()">Guess</button>
+    <button id="new-game-button" onclick="startNewGame()">New Game</button>
     <script>
         let wordList = ['apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi', 'lemon', 'mango'];
         let word = '';
@@ -49,6 +50,7 @@
         let incorrectGuessesDisplay = document.getElementById('incorrect-guesses');
         let guessInput = document.getElementById('guess');
         let guessButton = document.getElementById('guess-button');
+        let newGameButton = document.getElementById('new-game-button');
         let incorrectGuesses = [];
         let wins = 0;
 
